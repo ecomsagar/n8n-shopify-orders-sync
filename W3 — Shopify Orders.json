@@ -1,0 +1,314 @@
+{
+  "name": "W3 — Shopify Orders",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -208
+      ],
+      "id": "3266a568-798d-4e36-ac68-b5a77fee7305",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://top-tech-uae.myshopify.com/admin/api/2026-07/orders.json",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "status",
+              "value": "any"
+            },
+            {
+              "name": " limit",
+              "value": "5"
+            },
+            {
+              "name": "created_at_min",
+              "value": "={{ new Date(Date.now() - 20*60*1000).toISOString() }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Shopify-Access-Token"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -48,
+        -208
+      ],
+      "id": "b1b890c6-fbb8-42a0-be3c-b71800f7b0bc",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "orders",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -304
+      ],
+      "id": "c955f4f2-ffbc-4f9f-b334-0c8c5e6eb2f1",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6f4652d5-5a1d-4703-9f5a-1c1c53f96806",
+              "name": "OrderID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f54ed938-4677-41ee-a0e5-bd9f2867872e",
+              "name": "Number",
+              "value": "={{ $json.confirmation_number }}",
+              "type": "string"
+            },
+            {
+              "id": "ab1b816c-7a82-4f83-8648-76ca2f7027c7",
+              "name": "Amount",
+              "value": "={{ $json.current_subtotal_price }}",
+              "type": "string"
+            },
+            {
+              "id": "31b279b3-f561-42d2-8d07-dca9a029a58a",
+              "name": "Currency",
+              "value": "={{ $json.currency }}",
+              "type": "string"
+            },
+            {
+              "id": "e66fef40-9236-4420-bc25-6ce89619e940",
+              "name": "Date",
+              "value": "={{ $json.created_at }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        112,
+        -160
+      ],
+      "id": "6f5edd81-8f5b-4f8b-8247-6176ab3fe629",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1OZAXmzpTTZ6TEcNKy5DJpBo6I57dHIWDiqpNiL1mjI0",
+          "mode": "list",
+          "cachedResultName": "Top Tech UAE — Orders",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OZAXmzpTTZ6TEcNKy5DJpBo6I57dHIWDiqpNiL1mjI0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OZAXmzpTTZ6TEcNKy5DJpBo6I57dHIWDiqpNiL1mjI0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "OrderID",
+              "displayName": "OrderID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Currency",
+              "displayName": "Currency",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        336,
+        -160
+      ],
+      "id": "1fa3ec6b-60d5-4267-a7eb-f30241e2582f",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "flqhmQ1e2zr56SCL",
+          "name": "Google Sheets account 245"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "8737114442",
+        "text": "=🛒 নতুন অর্ডার\n\nনম্বর: {{ $json.Number }}\nটাকা: {{ $json.Amount }} {{ $json.Currency }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        512,
+        -160
+      ],
+      "id": "e14ddcc6-a627-48a3-b07d-e0c395744a45",
+      "name": "Send a text message",
+      "webhookId": "6209ed60-5fd4-48a7-80c4-798453fcc0fb",
+      "credentials": {
+        "telegramApi": {
+          "id": "W7syG0tXLdKeUeqp",
+          "name": "Telegram account 146"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "801cd530-8692-4cce-8ba2-eff6384d3223",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ab95a641c1b7099ef407af1cf01df77e8f73a8620f3dfa9286ddaad6ae2c066b"
+  },
+  "nodeGroups": [],
+  "id": "60iYLzoDtSwjksic",
+  "tags": []
+}
